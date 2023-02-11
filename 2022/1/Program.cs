@@ -7,6 +7,8 @@ var maxCalories = input
     .Select(x => x.Split("\n", StringSplitOptions.RemoveEmptyEntries))
     .Select(x => x.Select(int.Parse))
     .Select(x => x.Sum())
-    .Max();
+    .OrderDescending()
+    .Take(3)
+    .Sum();
 
 Console.WriteLine(maxCalories);
