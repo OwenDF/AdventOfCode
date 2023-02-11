@@ -2,50 +2,62 @@
 
 using _2;
 using static _2.Move;
+using static _2.Result;
 
 var input = await File.ReadAllLinesAsync("Input.txt");
 
 Console.WriteLine(input
     .Select(x => x.Split(' '))
-    .Select(x => new Round(InterpretMove(x[0][0]), InterpretMove(x[1][0])))
+    .Select(x => new Round(InterpretMove(x[0][0]), InterpretResult(x[1][0])))
     .Aggregate(0, CountPoints));
 
 int CountPoints(int current, Round next)
-    => current + (int)next.Mine + ReturnWinLoseDrawPoints(next);
+    => current + (int)ReturnMyMove(next) + (int)next.Result;
 
 Move InterpretMove(char c)
 {
     switch (c)
     {
         case 'A':
-        case 'X':
             return Rock;
         case 'B':
-        case 'Y':
             return Paper;
         case 'C':
-        case 'Z':
             return Scissors;
         default: throw new Exception();
     }
 }
 
-int ReturnWinLoseDrawPoints(Round round)
+Result InterpretResult(char c)
 {
-    switch (round.Mine, round.Theirs)
+    switch (c)
     {
-        case (Rock, Scissors):
-        case (Scissors, Paper):
-        case (Paper, Rock):
-            return 6;
-        case (Rock, Rock):
-        case (Scissors, Scissors):
-        case (Paper, Paper):
-            return 3;
-        case (Scissors, Rock):
-        case (Paper, Scissors):
-        case (Rock, Paper):
-            return 0;
+        case 'X':
+            return Lose;
+        case 'Y':
+            return Draw;
+        case 'Z':
+            return Win;
+        default: throw new Exception();
+    }
+}
+
+Move ReturnMyMove(Round round)
+{
+    switch (round.Result, round.Theirs)
+    {
+        case (Win, Scissors):
+        case (Lose, Paper):
+        case (Draw, Rock):
+            return Rock;
+        case (Win, Rock):
+        case (Lose, Scissors):
+        case (Draw, Paper):
+            return Paper;
+        case (Lose, Rock):
+        case (Draw, Scissors):
+        case (Win, Paper):
+            return Scissors;
         default: throw new Exception();
     }
 }
