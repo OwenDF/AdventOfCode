@@ -39,10 +39,17 @@ public static class Functions
     {
         var source = warehouse[instruction.StackFrom];
         var destination = warehouse[instruction.StackTo];
+        var miniStack = new Stack<Crate>();
 
         for (var i = 0; i < instruction.CrateCount; i++)
         {
             var crate = source.Pop();
+            miniStack.Push(crate);
+        }
+        
+        while (miniStack.Count > 0)
+        {
+            var crate = miniStack.Pop();
             destination.Push(crate);
         }
 
