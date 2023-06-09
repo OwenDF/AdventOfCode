@@ -6,6 +6,10 @@ public static class Functions
         (pair.First.Lower <= pair.Second.Lower && pair.First.Upper >= pair.Second.Upper) ||
         (pair.First.Lower >= pair.Second.Lower && pair.First.Upper <= pair.Second.Upper);
 
+    public static bool PartiallyOverlaps(ElfPair pair) =>
+        (pair.First.Lower <= pair.Second.Upper && pair.First.Upper >= pair.Second.Lower) ||
+        (pair.Second.Lower <= pair.First.Upper && pair.Second.Upper >= pair.First.Lower);
+
     public static ElfPair ToElfPair(string input)
     {
         var split = input.Split(',');
