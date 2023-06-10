@@ -57,3 +57,42 @@ for (var y = 0; y < yLength; y++)
 }
 
 Console.WriteLine(visibleTrees);
+
+var bestTreeScore = 0;
+
+for (var x = 1; x < xLength; x++)
+for (var y = 1; y < yLength; y++)
+{
+    var treeHeight = numGrid[x, y];
+    var xPlusScore = 0;
+    for (var xPlus = x + 1; xPlus < xLength; xPlus++)
+    {
+        xPlusScore++;
+        if (numGrid[xPlus, y] >= treeHeight) break;
+    }
+    
+    var xMinusScore = 0;
+    for (var xMinus = x - 1; xMinus >= 0; xMinus--)
+    {
+        xMinusScore++;
+        if (numGrid[xMinus, y] >= treeHeight) break;
+    }
+    
+    var yPlusScore = 0;
+    for (var yPlus = y + 1; yPlus < yLength; yPlus++)
+    {
+        yPlusScore++;
+        if (numGrid[x, yPlus] >= treeHeight) break;
+    }
+    
+    var yMinusScore = 0;
+    for (var yMinus = y - 1; yMinus >= 0; yMinus--)
+    {
+        yMinusScore++;
+        if (numGrid[x, yMinus] >= treeHeight) break;
+    }
+
+    bestTreeScore = Math.Max(bestTreeScore, xPlusScore * xMinusScore * yPlusScore * yMinusScore);
+}
+
+Console.WriteLine(bestTreeScore);
