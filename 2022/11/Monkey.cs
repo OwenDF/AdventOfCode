@@ -3,9 +3,9 @@ namespace _11;
 public class Monkey
 {
     public Monkey(
-        Queue<int> items,
-        Func<int, int> operation,
-        Func<int, bool> test,
+        Queue<long> items,
+        Func<long, long> operation,
+        Func<long, bool> test,
         int trueDestination,
         int falseDestination)
     {
@@ -15,10 +15,10 @@ public class Monkey
         TrueDestination = trueDestination;
         FalseDestination = falseDestination;
     }
-    public Queue<int> Items { get; }
-    public Func<int, int> Operation { get; }
-    public Func<int, bool> Test { get; }
+    public Queue<long> Items { get; }
+    public Func<long, long> Operation { get; }
+    public Func<long, bool> Test { get; }
     public int TrueDestination { get; }
     public int FalseDestination { get; }
-    public int InspectionCounter { get; set; }
+    public long InspectionCounter { get; set; }
 }
