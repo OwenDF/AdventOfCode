@@ -38,7 +38,7 @@ for (var i = 0; i < xRegValues.Count - 1; i++)
         continue;
     }
 
-    screen.Add('.');
+    screen.Add(' ');
 }
 
 Console.WriteLine(sum);
