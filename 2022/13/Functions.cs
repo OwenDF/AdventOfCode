@@ -9,7 +9,7 @@ public static class Functions
         AreElementsOrdered(CreateElement(pair.First), CreateElement(pair.Second)) ??
         throw new Exception("Elements are equal");
 
-    private static Element CreateElement(ReadOnlySpan<char> input)
+    public static Element CreateElement(this ReadOnlySpan<char> input)
     {
         var elementList = new List<Element>();
         var i = 0;
@@ -40,7 +40,7 @@ public static class Functions
         return elementList.Count is 1 ? elementList[0] : new ArrayElement(elementList);
     }
 
-    private static bool? AreElementsOrdered(Element first, Element second)
+    public static bool? AreElementsOrdered(Element first, Element second)
     {
         if (first is DigitElement firstDigit && second is DigitElement secondDigit)
         {
