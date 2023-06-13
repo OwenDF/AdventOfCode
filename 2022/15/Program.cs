@@ -12,14 +12,18 @@ var maxX = sensors.Select(x => x.Location.X + x.Range).Max();
 
 var coveredLocations = 0;
 
-for (var x = minX; x <= maxX; x++)
-{
-    if (sensors.Any(sensor => GetDistance(sensor.Location, new Point(x, y)) <= sensor.Range))
-    {
-        coveredLocations++;
-    }
-}
+// for (var x = minX; x <= maxX; x++)
+// {
+//     if (sensors.Any(sensor => GetDistance(sensor.Location, new Point(x, y)) <= sensor.Range))
+//     {
+//         coveredLocations++;
+//     }
+// }
 
 var beaconsInRow = beacons.Count(x => x.Y is y);
 
 Console.WriteLine(coveredLocations - beaconsInRow);
+
+var beacon = FindUncoveredPoint(pairs);
+
+Console.WriteLine((beacon.X * 4_000_000L) + beacon.Y);

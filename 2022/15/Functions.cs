@@ -21,4 +21,45 @@ public static class Functions
 
     private static int Read(string num) =>
         int.Parse(new string(num.AsSpan()[2..]));
+
+    public static Point FindUncoveredPoint(List<SensorBeaconPair> pairs) 
+    {
+        const int magicMax = 4_000_000;
+
+        for (var y = 0; y <= magicMax; y++)
+        {
+            var rowCoveredRanges = pairs.Select(p => GetRowCoverage(p, y))
+                .Where(x => x is not null)
+                .Select(x => x!.Value)
+                .ToList();
+            
+            var nextPosition = FindNextOpenPointOnRow(rowCoveredRanges, 0);
+
+            if (nextPosition <= magicMax) return new Point(nextPosition, y);
+        }
+
+        throw new Exception();
+    }
+
+    private static CoverageRange? GetRowCoverage(SensorBeaconPair pair, int rowNum)
+    {
+        var yElement = Math.Abs(pair.SensorLocation.Y - rowNum);
+        var range = GetDistance(pair.SensorLocation, pair.BeaconLocation);
+
+        if (range < yElement) return null;
+
+        return new CoverageRange(
+            pair.SensorLocation.X - (range - yElement),
+            pair.SensorLocation.X + (range - yElement));
+    }
+
+    private static int FindNextOpenPointOnRow(List<CoverageRange> ranges, int currentPosition)
+    {
+        var relevantRanges = ranges.Where(x => currentPosition >= x.MinIncl && currentPosition <= x.MaxIncl).ToList();
+
+        if (relevantRanges.Count is 0) return currentPosition;
+
+        var nextPosition = relevantRanges.MaxBy(x => x.MaxIncl).MaxIncl + 1;
+        return FindNextOpenPointOnRow(ranges, nextPosition);
+    }
 }
