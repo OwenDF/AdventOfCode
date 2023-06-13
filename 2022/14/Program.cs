@@ -16,19 +16,25 @@ foreach (var inputLine in input)
     }
 }
 
-var yMax = blockers.MaxBy(x => x.Y).Y;
+var yMax = blockers.MaxBy(x => x.Y).Y + 1;
 var sandStart = new Point(500, 0);
 
 int sandCount;
 for (var i = 0;;i++)
 {
+    if (blockers.Contains(sandStart))
+    {
+        sandCount = i;
+        break;
+    }
+
     var sandParticle = sandStart;
     while (true)
     {
-        if (sandParticle.Y > yMax)
+        if (sandParticle.Y == yMax)
         {
-            sandCount = i;
-            goto end;
+            blockers.Add(sandParticle);
+            break;
         }
 
         var down = sandParticle with { Y = sandParticle.Y + 1 };
@@ -52,10 +58,10 @@ for (var i = 0;;i++)
             sandParticle = downRight;
             continue;
         }
-
+        
         blockers.Add(sandParticle);
         break;
     }
 }
 
-end: Console.WriteLine(sandCount);
+Console.WriteLine(sandCount);
