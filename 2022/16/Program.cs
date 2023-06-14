@@ -20,4 +20,6 @@ Console.WriteLine("Distances calculated");
 var data = valveDistances.Select(x => new ValvePairDistance(x.Key, x.Value)).ToList();
 
 Console.WriteLine();
-Console.WriteLine(FindBestPressureRelease(data));
+Console.WriteLine(FindBestPressureReleaseFor2(data));
+
+Console.WriteLine(Counter);

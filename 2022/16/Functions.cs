@@ -2,6 +2,8 @@ namespace _16;
 
 public static class Functions
 {
+    public static int Counter;
+    
     public static Valve MapToValve(this string input)
     {
         const string first = "Valve ";
@@ -54,6 +56,15 @@ public static class Functions
 
         return result[0].CumulativeRelease;
     }
+    
+    public static int FindBestPressureReleaseFor2(List<ValvePairDistance> valveDistances)
+    {
+        var result = OpenValve(valveDistances, 0, 26, 26, new HashSet<string>(), "AA", "AA", false);
+
+        result.ForEach(x => Console.WriteLine($"Valve: {x.ValveName}, Release: {x.CumulativeRelease}, Time: {x.Time}"));
+
+        return result[0].CumulativeRelease;
+    }
 
     public static List<PressureRelease> OpenValve(
         List<ValvePairDistance> valveDistances,
@@ -77,7 +88,7 @@ public static class Functions
             .OrderByDescending(x => (timeCopy - (x.Distance + 1)) * x.Destination.FlowRate)
             .ToList();
 
-        if (bestMoves.Count is 0) return new List<PressureRelease> { new("END", pressureReleased, time) };
+        if (bestMoves.Count is 0) return new List<PressureRelease> { new(currentValve, pressureReleased, time) };
         
         var paths = new List<List<PressureRelease>>();
         foreach (var move in bestMoves.Take(8))
@@ -90,6 +101,78 @@ public static class Functions
                 time - (move.Distance + 1),
                 valves,
                 move.Destination.Name);
+
+            release.Add(new(currentValve, pressureReleased, time));
+            
+            paths.Add(release);
+        }
+        
+        return paths.MaxBy(x => x[0].CumulativeRelease);
+    }
+    
+    public static List<PressureRelease> OpenValve(
+        List<ValvePairDistance> valveDistances,
+        int pressureReleased,
+        int time1,
+        int time2,
+        HashSet<string> valvesOpened,
+        string currentValve1,
+        string currentValve2,
+        bool magicSwitch = false)
+    {
+        var (time, currentValve, is1) = time1 > time2 ? (time1, currentValve1, true) : (time2, currentValve2, false);
+        if (time < 15 && pressureReleased < 1500) return new List<PressureRelease> { new("", 0, -1) };
+
+        var possibleMoves = valveDistances
+            .Where(x => x.Pair.First.Name == currentValve)
+            .Select(x => new Move(x.Pair.Second, x.Distance))
+            .Concat(valveDistances
+                .Where(x => x.Pair.Second.Name == currentValve)
+                .Select(x => new Move(x.Pair.First, x.Distance)))
+            .Where(x => !valvesOpened.Contains(x.Destination.Name))
+            .Where(x => x.Distance + 1 < time)
+            .Where(x => !magicSwitch || x.Distance > 5)
+            .ToList();
+
+        var timeCopy = time;
+        var bestMoves = possibleMoves
+            .OrderByDescending(x => (timeCopy - (x.Distance + 1)) * x.Destination.FlowRate)
+            .ToList();
+
+        if (bestMoves.Count is 0)
+        {
+            Counter++;
+            return new List<PressureRelease> { new(currentValve, pressureReleased, time) };
+        }
+
+        var paths = new List<List<PressureRelease>>();
+        foreach (var move in bestMoves.Take(13))
+        {
+            var valves = new HashSet<string>(valvesOpened) { move.Destination.Name };
+            
+            List<PressureRelease> release;
+            if (is1) 
+            {
+                release = OpenValve(
+                    valveDistances,
+                    pressureReleased + (time - (move.Distance + 1)) * move.Destination.FlowRate,
+                    time - (move.Distance + 1),
+                    time2,
+                    valves,
+                    move.Destination.Name,
+                    currentValve2);
+            }
+            else 
+            {
+                release = OpenValve(
+                    valveDistances,
+                    pressureReleased + (time - (move.Distance + 1)) * move.Destination.FlowRate,
+                    time1,
+                    time - (move.Distance + 1),
+                    valves,
+                    currentValve1,
+                    move.Destination.Name);
+            }
 
             release.Add(new(currentValve, pressureReleased, time));
             
