@@ -2,17 +2,16 @@
 
 var jetDirections = (await File.ReadAllTextAsync("Input.txt")).Trim().Select(x => x).ToArray();
 
+const long maxRocks = 1_000_000_000_000;
+
 var cave = new HashSet<Point> { new(0, 0), new(1, 0), new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0) };
 var rockFactory = new RockFactory();
 var rockNumber = 0;
 var maxHeight = 0;
 var rock = rockFactory.GetNextRock(cave, 4, rockNumber);
-var counter = 0;
+int magicNumber;
 
-// Console.WriteLine(jetDirections.Length);
-// Console.WriteLine(new string(jetDirections));
-
-for (var turnCount = 0; rockNumber < 2022; turnCount++)
+for (var turnCount = 0L; rockNumber < 7000; turnCount++)
 {
     var jetDirection = jetDirections[turnCount % jetDirections.Length];
 
@@ -29,71 +28,46 @@ for (var turnCount = 0; rockNumber < 2022; turnCount++)
     }
 
     if (rock.GetFullCurrentPosition().Any(x => cave.Contains(x))) throw new Exception();
-    
-    // for (var y = 20; y >= 0; y--)
-    // {
-    //     Console.Write($"{y:0000}: ");
-    //     for (var x = 0; x < 7; x++)
-    //     {
-    //         if (cave.Contains(new(x, y))) Console.Write("#");
-    //         else if (rock.GetFullCurrentPosition().Contains(new(x, y))) Console.Write("@");
-    //         else Console.Write(".");
-    //     }
-    //
-    //     Console.WriteLine();
-    // }
-    
-    // Console.WriteLine();Console.WriteLine();
 
     var dropResult = rock.Drop();
     if (dropResult is not null)
     {
-        counter++;
         maxHeight = Math.Max(dropResult.Value, maxHeight);
+        // maxHeights.Add(maxHeight);
+        // if ((rockNumber + 1) > 100 && (rockNumber + 1) % 10 == 0 && maxHeights[(rockNumber + 1) / 2] * 2 == maxHeight)
+        // {
+        //     Console.WriteLine(rockNumber + 1);
+        //
+        //     if (maxRocks % (rockNumber + 1) == 0)
+        //     {
+        //         Console.WriteLine((maxRocks / (rockNumber + 1)) * maxHeight);
+        //         break;
+        //     }
+        // }
+
+        // if ((rockNumber + 1) % 17000 == 0) Console.WriteLine(maxHeight);
+        // if ((rockNumber + 1) % 170000 == 0) break;
+
         rock = rockFactory.GetNextRock(cave, maxHeight + 4, ++rockNumber);
     }
-    
-    // for (var y = 20; y >= 0; y--)
+
+    // if (turnCount + 1 % jetDirections.Length == 0 && cave.Contains(new(0, maxHeight)) &&
+    //     cave.Contains(new(1, maxHeight)) && cave.Contains(new(2, maxHeight)) && cave.Contains(new(3, maxHeight)) &&
+    //     cave.Contains(new(4, maxHeight)) && cave.Contains(new(5, maxHeight)) && cave.Contains(new(6, maxHeight)))
     // {
-    //     Console.Write($"{y:0000}: ");
-    //     for (var x = 0; x < 7; x++)
-    //     {
-    //         if (cave.Contains(new(x, y))) Console.Write("#");
-    //         else if (rock.GetFullCurrentPosition().Contains(new(x, y))) Console.Write("@");
-    //         else Console.Write(".");
-    //     }
-    //
-    //     Console.WriteLine();
+    //     Console.WriteLine(rockNumber);
     // }
-    //
-    // Console.WriteLine();Console.WriteLine();
-    //
-    // Console.WriteLine();
-    // Console.WriteLine();
-    // Console.WriteLine(maxHeight);
-    // Console.WriteLine();
-    // Console.WriteLine();
 
-
-    // if (turnCount % 100 == 0) Console.WriteLine(turnCount);
+    // if (turnCount + 1 % jetDirections.Length == 0 && rockNumber % 5 == 0)
+    // {
+    //     Console.WriteLine(rockNumber);
+    //     Console.WriteLine(maxHeight);
+    //     break;
+    // }
 }
 
-// for (var y = 20; y >= 0; y--)
-// {
-//     Console.Write($"{y:0000}: ");
-//     for (var x = 0; x < 7; x++)
-//     {
-//         Console.Write(cave.Contains(new(x, y)) ? "#" : ".");
-//     }
-//
-//     Console.WriteLine();
-// }
-
-// foreach (var item in cave)
-// {
-//     if (item.X is < 0 or > 6) throw new Exception();
-// }
-
+Console.WriteLine(maxRocks % 17_000);
 Console.WriteLine(maxHeight);
 
-Console.WriteLine(counter);
+Console.WriteLine(((maxRocks / 17_000) * 26540) + maxHeight);
+
