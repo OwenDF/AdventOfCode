@@ -2,7 +2,7 @@ namespace _20;
 
 public static class Functions
 {
-    public static LinkedListNode<T> GetPrevious<T>(this LinkedListNode<T> current, int count) 
+    public static LinkedListNode<T> GetPrevious<T>(this LinkedListNode<T> current, long count) 
     {
         for (var i = 0; i < count; i++)
         {
@@ -12,7 +12,7 @@ public static class Functions
         return current;
     }
     
-    public static LinkedListNode<T> GetNext<T>(this LinkedListNode<T> current, int count) 
+    public static LinkedListNode<T> GetNext<T>(this LinkedListNode<T> current, long count) 
     {
         for (var i = 0; i < count; i++)
         {
