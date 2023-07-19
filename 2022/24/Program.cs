@@ -27,4 +27,36 @@ while (true)
     if (possibleLocations.Contains(exit)) break;
 }
 
+possibleLocations = new HashSet<Point> { exit };
+
+while (true)
+{
+    blizzardState = blizzardState.Progress(maxX, maxY);
+    var state = blizzardState;
+    possibleLocations = possibleLocations
+        .SelectMany(l => l.AdjacentPoints.Where(ap => ap.IsSafePoint(state, entrance, exit, maxX, maxY)))
+        .Concat(possibleLocations.Where(p => p.IsSafePoint(state, entrance, exit, maxX, maxY)))
+        .ToHashSet();
+
+    counter++;
+
+    if (possibleLocations.Contains(entrance)) break;
+}
+
+possibleLocations = new HashSet<Point> { entrance };
+
+while (true)
+{
+    blizzardState = blizzardState.Progress(maxX, maxY);
+    var state = blizzardState;
+    possibleLocations = possibleLocations
+        .SelectMany(l => l.AdjacentPoints.Where(ap => ap.IsSafePoint(state, entrance, exit, maxX, maxY)))
+        .Concat(possibleLocations.Where(p => p.IsSafePoint(state, entrance, exit, maxX, maxY)))
+        .ToHashSet();
+
+    counter++;
+
+    if (possibleLocations.Contains(exit)) break;
+}
+
 Console.WriteLine(counter);
