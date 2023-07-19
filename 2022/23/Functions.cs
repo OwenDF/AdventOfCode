@@ -15,7 +15,7 @@ public static class Functions
         return elves;
     }
 
-    public static IReadOnlySet<Point> DisperseElves(
+    public static (bool endRound, IReadOnlySet<Point> endState) DisperseElves(
         IReadOnlySet<Point> startingElves,
         IReadOnlyList<Direction> orderOfDirections)
     {
@@ -25,7 +25,11 @@ public static class Functions
         foreach (var elf in startingElves)
         {
             var elfContext = CreateElfContext(elf);
-            if (elfContext.IsIsolated(startingElves)) continue;
+            if (elfContext.IsIsolated(startingElves))
+            {
+                isolatedElves++;
+                continue;
+            }
 
             var proposedMove = ProposeMove(elfContext, startingElves, orderOfDirections);
 
@@ -48,7 +52,7 @@ public static class Functions
             elves.Add(proposal.Key);
         }
 
-        return elves;
+        return (isolatedElves == elves.Count, elves);
     }
 
     private static Point ProposeMove(
