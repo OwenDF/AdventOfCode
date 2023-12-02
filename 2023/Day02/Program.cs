@@ -1,17 +1,8 @@
 ﻿using static Day02.Functions;
 
-var games = File.ReadAllLines("Input.txt").Select(ToGame).ToList();
-
-var gameSum = 0;
-var (maxRed, maxGreen, maxBlue) = (12, 13, 14);
-
-for (var i = 0; i < games.Count; i++)
-{
-    foreach (var round in games[i].Rounds)
-        if (round.Red > maxRed || round.Green > maxGreen || round.Blue > maxBlue) goto continueOuter;
-
-    gameSum += i + 1;
-    continueOuter: ;
-}
-
-Console.WriteLine(gameSum);
+Console.WriteLine(
+    (from game in File.ReadAllLines("Input.txt").Select(ToGame) 
+    let minBlue = game.Rounds.Max(x => x.Blue)
+    let minRed = game.Rounds.Max(x => x.Red)
+    let minGreen = game.Rounds.Max(x => x.Green)
+    select minBlue * minGreen * minRed).Sum());
