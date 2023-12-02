@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day01", "Day01\Day01.csproj", "{D384370A-532E-48B0-B6AC-6EEC910F2A89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day02", "Day02\Day02.csproj", "{898A6FF4-1779-4C31-9512-D2606102FB0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D384370A-532E-48B0-B6AC-6EEC910F2A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D384370A-532E-48B0-B6AC-6EEC910F2A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D384370A-532E-48B0-B6AC-6EEC910F2A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{898A6FF4-1779-4C31-9512-D2606102FB0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{898A6FF4-1779-4C31-9512-D2606102FB0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{898A6FF4-1779-4C31-9512-D2606102FB0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{898A6FF4-1779-4C31-9512-D2606102FB0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
