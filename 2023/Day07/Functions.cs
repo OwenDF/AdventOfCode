@@ -12,7 +12,17 @@ internal static class Functions
 internal class Cards : IComparable<Cards>
 {
     private const int FixedSize = 5;
-    private static readonly char[] CardRank = { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' };
+
+    private const int FiveOfAKind = 7;
+    private const int FourOfAKind = 6;
+    private const int FullHouse = 5;
+    private const int ThreeOfAKind = 4;
+    private const int TwoPair = 3;
+    private const int Pair = 2;
+    private const int HighCard = 1;
+    
+    private static readonly char[] CardRank = { 'J','2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' };
+    private static readonly Card Joker = new('J');
     private readonly Card[] _items;
 
     public Cards(IEnumerable<Card> items)
@@ -45,16 +55,24 @@ internal class Cards : IComparable<Cards>
     private int GetHandTypeValue()
     {
         var grouped = _items.GroupBy(x => x).ToList();
+        var jackCount = _items.Count(x => x == Joker);
 
         return grouped.Count switch
         {
-            1 => 7,
-            2 when grouped.Any(x => x.Count() is 4) => 6,
-            2 => 5,
-            3 when grouped.Any(x => x.Count() is 3) => 4,
-            3 => 3,
-            4 => 2,
-            5 => 1,
+            1 => FiveOfAKind,
+            2 when jackCount is not 0 => FiveOfAKind,
+            2 when grouped.Any(x => x.Count() is 4) => FourOfAKind,
+            2 => FullHouse,
+            3 when jackCount is 3 => FourOfAKind,
+            3 when grouped.Any(x => x.Count() is 3) && jackCount is 1 => FourOfAKind,
+            3 when jackCount is 2 => FourOfAKind,
+            3 when jackCount is 1 => FullHouse,
+            3 when grouped.Any(x => x.Count() is 3) => ThreeOfAKind,
+            3 => TwoPair,
+            4 when jackCount is not 0 => ThreeOfAKind,
+            4 => Pair,
+            5 when jackCount is 1 => Pair,
+            5 => HighCard,
             _ => throw new Exception()
         };
     }
