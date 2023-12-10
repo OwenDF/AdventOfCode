@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <None Remove="Input.txt" />
+    <Content Include="Input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
