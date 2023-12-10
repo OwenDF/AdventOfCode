@@ -14,4 +14,4 @@ internal static class Functions
     }
 }
 
-internal record Race(int TimeLimit, int BestDistance);
+internal record Race(long TimeLimit, long BestDistance);
