@@ -2,6 +2,6 @@
 
 var sequences = File.ReadAllLines("Input.txt").Select(x => x.Split(' ').Select(int.Parse).ToArray()).ToArray();
 
-var extrapolatedValues = sequences.Select(ExtrapolateNextValue);
+var extrapolatedValues = sequences.Select(ExtrapolatePreviousValue);
 
 Console.WriteLine(extrapolatedValues.Sum());
