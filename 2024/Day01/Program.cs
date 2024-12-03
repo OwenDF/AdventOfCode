@@ -11,7 +11,8 @@ foreach (var line in lines)
 left.Sort();
 right.Sort();
 
-var total = 0;
-for (var i = 0; i < left.Count; i++) total += Math.Abs(left[i] - right[i]);
+var rightCount = right.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+
+var total = left.Sum(number => number * rightCount.GetValueOrDefault(number, 0));
 
 Console.WriteLine(total);
