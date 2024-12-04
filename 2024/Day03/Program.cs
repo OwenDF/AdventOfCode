@@ -1,12 +1,30 @@
 ﻿var textSpan = File.ReadAllText("Input.txt").AsSpan();
 
 long sum = 0;
+var on = true;
 while (true)
 {
-    var possibleInstructionStart = textSpan.IndexOf("mul(");
-    if (possibleInstructionStart is -1) break;
+    var possibleMulStart = textSpan.IndexOf("mul(");
+    var doStart = textSpan.IndexOf("do()");
+    var dontStart = textSpan.IndexOf("don't()");
+    if (possibleMulStart is -1) break;
 
-    textSpan = textSpan[(possibleInstructionStart + 4)..];
+    if (doStart is not - 1 && (doStart < dontStart || dontStart is -1) && doStart < possibleMulStart)
+    {
+        textSpan = textSpan[(doStart + 4)..];
+        on = true;
+        continue;
+    }
+    
+    if (dontStart is not -1 && dontStart < possibleMulStart)
+    {
+        textSpan = textSpan[(dontStart + 6)..];
+        on = false;
+        continue;
+    }
+
+    textSpan = textSpan[(possibleMulStart + 4)..];
+    if (!on) continue;
 
     int firstPart;
     if (int.TryParse(textSpan[..3], out var num3))
