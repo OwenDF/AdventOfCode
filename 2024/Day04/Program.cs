@@ -1,48 +1,27 @@
-﻿Console.WriteLine(GetXmasCount(AsTwoDimensionalArray(File.ReadAllLines("Input.txt")), 0, 0));
+﻿Console.WriteLine(GetXmasCount(AsTwoDimensionalArray(File.ReadAllLines("Input.txt")), 1, 1));
 
 int GetXmasCount(char[,] searchBox, int xPosition, int yPosition)
 {
-    if (xPosition > searchBox.GetUpperBound(0))
+    if (xPosition > searchBox.GetUpperBound(0) - 1)
     {
-        xPosition = 0;
+        xPosition = 1;
         yPosition++;
     }
 
-    if (yPosition > searchBox.GetUpperBound(1)) return 0;
+    if (yPosition > searchBox.GetUpperBound(1) - 1) return 0;
 
-    var xmasCount = GetXmasCountAtPosition(searchBox, xPosition, yPosition);
-
-    return xmasCount + GetXmasCount(searchBox, xPosition + 1, yPosition);
+    return GetXmasCount(searchBox, xPosition + 1, yPosition) +
+           (IsXmasAtPosition(searchBox, xPosition, yPosition) ? 1 : 0);
 }
 
-int GetXmasCountAtPosition(char[,] searchBox, int xPosition, int yPosition)
+bool IsXmasAtPosition(char[,] searchBox, int x, int y)
 {
-    if (searchBox[xPosition, yPosition] is not 'X') return 0;
+    if (searchBox[x, y] is not 'A') return false;
 
-    return new[]
-    {
-        IsXmas(searchBox, xPosition, yPosition, 1, 0),
-        IsXmas(searchBox, xPosition, yPosition, 0, 1),
-        IsXmas(searchBox, xPosition, yPosition, 1, 1),
-        IsXmas(searchBox, xPosition, yPosition, -1, 0),
-        IsXmas(searchBox, xPosition, yPosition, 0, -1),
-        IsXmas(searchBox, xPosition, yPosition, -1, -1),
-        IsXmas(searchBox, xPosition, yPosition, -1, 1),
-        IsXmas(searchBox, xPosition, yPosition, 1, -1)
-    }.Select(x => x ? 1 : 0).Sum();
-}
-
-bool IsXmas(char[,] searchBox, int xPosition, int yPosition, int xTravel, int yTravel)
-{
-    if (xPosition + xTravel * 3 > searchBox.GetUpperBound(0) || xPosition + xTravel * 3 < 0 ||
-        yPosition + yTravel * 3 > searchBox.GetUpperBound(1) || yPosition + yTravel * 3 < 0)
-    {
-        return false;
-    }
-
-    return searchBox[xPosition + xTravel, yPosition + yTravel] is 'M' &&
-           searchBox[xPosition + xTravel * 2, yPosition + yTravel * 2] is 'A' &&
-           searchBox[xPosition + xTravel * 3, yPosition + yTravel * 3] is 'S';
+    return ((searchBox[x - 1, y + 1] is 'M' && searchBox[x + 1, y - 1] is 'S') ||
+            (searchBox[x - 1, y + 1] is 'S' && searchBox[x + 1, y - 1] is 'M')) &&
+           ((searchBox[x + 1, y + 1] is 'M' && searchBox[x - 1, y - 1] is 'S') ||
+            (searchBox[x + 1, y + 1] is 'S' && searchBox[x - 1, y - 1] is 'M'));
 }
 
 char[,] AsTwoDimensionalArray(string[] lines)
