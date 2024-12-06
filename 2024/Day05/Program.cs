@@ -7,21 +7,35 @@ var printingLists = sections[1].Split('\n', StringSplitOptions.RemoveEmptyEntrie
     .Select(x => x.Split(',', StringSplitOptions.RemoveEmptyEntries))
     .Select(x => x.Select(int.Parse).ToList()).ToList();
 
+var ruleRunner = CreateRuleRunner(rules);
+
 foreach (var list in printingLists)
 {
     var items = new HashSet<int>();
     foreach (var number in list)
     {
         items.Add(number);
-        if (rules[number].Intersect(items).Any()) goto end;
+        if (rules[number].Intersect(items).Any()) goto fixy;
     }
 
+    continue;
+
+    fixy: ;
+    list.Sort(ruleRunner);
     middleSum += list[list.Count / 2];
-    
-    end: ;
 }
 
 Console.WriteLine(middleSum);
+
+Comparison<int> CreateRuleRunner(Dictionary<int, ISet<int>> rules)
+{
+    return (x, y) =>
+    {
+        if (rules.TryGetValue(x, out var mustBeAfterX) && mustBeAfterX.Contains(y)) return -1;
+        if (rules.TryGetValue(y, out var mustBeAfterY) && mustBeAfterY.Contains(x)) return 1;
+        return 0;
+    };
+}
 
 Dictionary<int, ISet<int>> CreateRules(string rules)
 {
