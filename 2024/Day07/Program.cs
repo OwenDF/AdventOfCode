@@ -1,4 +1,8 @@
-﻿Console.WriteLine(File.ReadAllLines("Input.txt")
+﻿var bla = File.ReadAllLines("Input.txt")
+    .Select(ToEquation)
+    .Where(x => EquationCanBeSolved(x.Nums.Span[0], x.Nums.Span[1..], x.Target));
+
+Console.WriteLine(File.ReadAllLines("Input.txt")
     .Select(ToEquation)
     .Where(x => EquationCanBeSolved(x.Nums.Span[0], x.Nums.Span[1..], x.Target))
     .Sum(x => x.Target));
@@ -6,11 +10,11 @@
 bool EquationCanBeSolved(long runningTotal, ReadOnlySpan<int> remainingNums, long target)
 {
     if (runningTotal > target) return false;
-    if (runningTotal == target) return true;
-    if (remainingNums.IsEmpty) return false;
-
+    if (remainingNums.IsEmpty) return runningTotal == target;
+    
     return EquationCanBeSolved(runningTotal + remainingNums[0], remainingNums[1..], target) ||
-           EquationCanBeSolved(runningTotal * remainingNums[0], remainingNums[1..], target);
+           EquationCanBeSolved(runningTotal * remainingNums[0], remainingNums[1..], target) ||
+           EquationCanBeSolved(long.Parse(runningTotal.ToString() + remainingNums[0]), remainingNums[1..], target);
 }
 
 Equation ToEquation(string inputLine)
