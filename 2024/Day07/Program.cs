@@ -1,8 +1,4 @@
-﻿var bla = File.ReadAllLines("Input.txt")
-    .Select(ToEquation)
-    .Where(x => EquationCanBeSolved(x.Nums.Span[0], x.Nums.Span[1..], x.Target));
-
-Console.WriteLine(File.ReadAllLines("Input.txt")
+﻿Console.WriteLine(File.ReadAllLines("Input.txt")
     .Select(ToEquation)
     .Where(x => EquationCanBeSolved(x.Nums.Span[0], x.Nums.Span[1..], x.Target))
     .Sum(x => x.Target));
