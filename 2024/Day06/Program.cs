@@ -1,26 +1,37 @@
 ﻿var map = AsTwoDimensionalArray(File.ReadAllLines("Input.txt"));
 
-var visitedLocations = new HashSet<(int, int)>();
+var loopPositions = 0;
 var startingLocation = FindStartingLocation(map);
 
-RunRoute(map, startingLocation, visitedLocations);
+var defaultRoute = GetDefaultRoute(map, startingLocation);
+defaultRoute.Remove(startingLocation);
 
-Console.WriteLine(visitedLocations.Count);
+foreach(var (i,j) in defaultRoute)  
+{
+    if (map[i, j] is '^' or '#') continue;
 
-void RunRoute(char[,] map, (int x, int y) startingLocation, HashSet<(int, int)> visitedLocations)
+    map[i, j] = '#';
+    if (IsRouteCircular(map, startingLocation)) loopPositions++;
+    map[i, j] = 'a';
+}
+
+Console.WriteLine(loopPositions);
+
+HashSet<(int, int)> GetDefaultRoute(char[,] map, (int x, int y) startingLocation)
 {
     // turn right from west = north
     var currentDir = TurnRight((-1, 0));
     var currentPosition = startingLocation;
+    var visitedPositions = new HashSet<(int, int)>();
 
     while (true)
     {
-        visitedLocations.Add(currentPosition);
+        visitedPositions.Add(currentPosition);
         (int x, int y) nextPosition = (currentPosition.x + currentDir.x, currentPosition.y + currentDir.y);
         
         if (nextPosition.x < 0 || nextPosition.x > map.GetUpperBound(0) ||
             nextPosition.y < 0 || nextPosition.y > map.GetUpperBound(1)) 
-            return;
+            return visitedPositions;
 
         if (map[nextPosition.x, nextPosition.y] is '#')
         {
@@ -28,6 +39,35 @@ void RunRoute(char[,] map, (int x, int y) startingLocation, HashSet<(int, int)> 
             continue;
         }
 
+        currentPosition = nextPosition;
+    }
+}
+
+bool IsRouteCircular(char[,] map, (int x, int y) startingLocation)
+{
+    // turn right from west = north
+    var startingDirection = TurnRight((-1, 0));
+    var currentDir = startingDirection;
+    var currentPosition = startingLocation;
+    var started = false;
+    var route = new HashSet<((int, int), (int, int))>();
+
+    while (true)
+    {
+        (int x, int y) nextPosition = (currentPosition.x + currentDir.x, currentPosition.y + currentDir.y);
+        
+        if (nextPosition.x < 0 || nextPosition.x > map.GetUpperBound(0) ||
+            nextPosition.y < 0 || nextPosition.y > map.GetUpperBound(1)) 
+            return false;
+
+        if (map[nextPosition.x, nextPosition.y] is '#')
+        {
+            currentDir = TurnRight(currentDir);
+            continue;
+        }
+
+        if (!route.Add((currentPosition, currentDir))) return true;
+        
         currentPosition = nextPosition;
     }
 }
